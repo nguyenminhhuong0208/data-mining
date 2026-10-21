@@ -1,2 +1,2 @@
 # data-mining
-Full course of data mining from Department of Knowledge Science, IAI - UET
+Full course on Data Mining from the Department of Knowledge Science, IAI - UET
