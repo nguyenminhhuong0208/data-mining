@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+  <title>Bài 01: Tổng quan Khai phá dữ liệu & Mô hình thuật toán</title>
+  <meta name="description" content="Khái niệm cơ bản, quy trình KDD, thách thức dữ liệu lớn và các bài toán cốt lõi trong khai phá dữ liệu."/>
+  <link rel="icon" type="image/png" href="favicon.png?v=2"/>
+  <link rel="icon" type="image/x-icon" href="favicon.ico?v=2"/>
+  <link rel="stylesheet" href="revealjs/dist/reset.css"/>
+  <link rel="stylesheet" href="revealjs/dist/reveal.css"/>
+  <link rel="stylesheet" href="revealjs/dist/theme/white.css"/>
+  <link rel="stylesheet" href="lecture-style.css"/>
+  <link rel="stylesheet" href="plugin/highlight/monokai.css"/>
+</head>
+<body>
+  <div class="reveal course-deck lecture-tong-quan">
+    <div class="slides">
+      <!-- Mạch 1: Mở đầu -->
+      <section aria-label="Mở đầu">
+        <section id="lec01-s01-01" data-slide-id="lec01-s01-01" class="title-slide">
+          <h1 class="lecture-title">Tổng quan Khai phá dữ liệu</h1>
+          <p class="supporting-text">Từ dữ liệu quy mô lớn đến tri thức hữu ích: mô hình, nguyên lý và thách thức thuật toán.</p>
+          <p class="course-name">Khai phá dữ liệu (Data Mining)</p>
+          <p class="institution-name">Viện Trí tuệ Nhân tạo · Trường Đại học Công nghệ · ĐHQGHN</p>
+          <aside class="notes"><p>Giới thiệu bức tranh toàn cảnh của môn học và vai trò của thuật toán khai phá dữ liệu quy mô lớn.</p></aside>
+        </section>
+
+        <section id="lec01-s01-02" data-slide-id="lec01-s01-02" class="example-slide">
+          <h2>Quy trình KDD (Knowledge Discovery in Databases)</h2>
+          <p>Khai phá dữ liệu là bước cốt lõi trong quy trình khám phá tri thức từ cơ sở dữ liệu:</p>
+          <ul>
+            <li><strong>Dữ liệu thô (Raw Data):</strong> Thu thập và tích hợp từ nhiều nguồn.</li>
+            <li><strong>Tiền xử lý (Preprocessing):</strong> Làm sạch, khử nhiễu, chuẩn hóa.</li>
+            <li><strong>Biến đổi (Transformation):</strong> Giảm chiều, trích chọn đặc trưng.</li>
+            <li><strong>Khai phá dữ liệu (Data Mining):</strong> Áp dụng thuật toán tìm mẫu.</li>
+            <li><strong>Đánh giá & Biểu diễn:</strong> Kiểm định và trực quan hóa kết quả.</li>
+          </ul>
+          <aside class="notes"><p>Nhấn mạnh: Khai phá dữ liệu không đơn thuần là chạy thuật toán, mà cần hiểu rõ dữ liệu đầu vào và ý nghĩa kết quả.</p></aside>
+        </section>
+
+        <section id="lec01-s01-03" data-slide-id="lec01-s01-03" class="agenda-slide">
+          <h2>Các trụ cột nội dung của học phần</h2>
+          <ol>
+            <li><strong>Khai phá mẫu phổ biến:</strong> Tập mục thường gặp, luật kết hợp.</li>
+            <li><strong>Tìm kiếm lân cận & Tương đồng:</strong> Shingling, MinHash, LSH.</li>
+            <li><strong>Phân cụm dữ liệu quy mô lớn:</strong> K-Means, BFR, CURE.</li>
+            <li><strong>Dòng dữ liệu (Data Streams):</strong> Lấy mẫu, đếm mốc thời gian, cửa sổ trượt.</li>
+            <li><strong>Phân tích đồ thị & Mạng xã hội:</strong> PageRank, HITS, phát hiện cộng đồng.</li>
+          </ol>
+          <aside class="notes"><p>5 mạch chuyên đề sẽ được triển khai xuyên suốt khóa học theo tài liệu chuẩn MMDS.</p></aside>
+        </section>
+      </section>
+
+      <!-- Mạch 2: Thách thức & Toán học -->
+      <section aria-label="Thách thức thuật toán">
+        <section id="lec01-s02-00" data-slide-id="lec01-s02-00" class="strand-title">
+          <div class="strand-title-body">
+            <h2><span class="strand-number">2.</span>Thách thức dữ liệu lớn</h2>
+            <p class="strand-lead">Quy mô vượt giới hạn bộ nhớ trong đòi hỏi thuật toán sub-linear hoặc streaming.</p>
+            <p class="strand-keys">Độ phức tạp I/O · Không gian bộ nhớ · Xử lý gần đúng</p>
+          </div>
+          <aside class="notes"><p>Mạch này đặt ra lý do vì sao thuật toán truyền thống không áp dụng được trực tiếp cho dữ liệu lớn.</p></aside>
+        </section>
+
+        <section id="lec01-s02-01" data-slide-id="lec01-s02-01" class="example-slide">
+          <h2>Mô hình tính toán và giới hạn</h2>
+          <p><strong>Nhu cầu:</strong> Khi tập dữ liệu có $N$ phần tử vượt xa dung lượng RAM:</p>
+          <ul>
+            <li>Thuật toán độ phức tạp thời gian $\mathcal{O}(N^2)$ không khả thi khi $N = 10^8$.</li>
+            <li>Không thể so sánh từng cặp trực tiếp: $\binom{10^8}{2} \approx 5 \times 10^{15}$ phép so sánh.</li>
+            <li>Cần thuật toán <strong>tiệm cận tuyến tính</strong> $\mathcal{O}(N)$ hoặc xấp xỉ xác suất.</li>
+          </ul>
+          <aside class="notes"><p>Minh họa con số cụ thể để người học thấy rõ áp lực tính toán.</p></aside>
+        </section>
+
+        <section id="lec01-s02-02" data-slide-id="lec01-s02-02" class="example-slide">
+          <h2>Định lý Bonferroni và Hiện tượng Mẫu giả</h2>
+          <p><strong>Lưu ý:</strong> Khi tìm kiếm trong tập dữ liệu khổng lồ, các sự kiện bất thường có thể xảy ra ngẫu nhiên thuần túy (hiện tượng Bonferroni):</p>
+          <p>Nếu kiểm định $m$ giả thuyết độc lập ở ngưỡng ý nghĩa $\alpha$:</p>
+          <p>$$\mathbb{P}(\text{Ít nhất một sai lầm loại I}) \le 1 - (1 - \alpha)^m \approx m\alpha$$</p>
+          <p>Muốn khống chế sai số toàn cục ở mức $\alpha$, mỗi kiểm định con cần ngưỡng $\frac{\alpha}{m}$.</p>
+          <aside class="notes"><p>Giải thích ý nghĩa của hiệu chỉnh Bonferroni trong phát hiện tri thức.</p></aside>
+        </section>
+      </section>
+
+      <!-- Mạch tổng kết -->
+      <section aria-label="Tổng kết">
+        <section id="lec01-s03-00" data-slide-id="lec01-s03-00" class="strand-title">
+          <div class="strand-title-body">
+            <h2><span class="strand-number">3.</span>Tổng kết và Hướng dẫn tự học</h2>
+            <p class="strand-lead">Nắm vững ranh giới giữa tính toán chính xác và xấp xỉ có bảo đảm.</p>
+          </div>
+          <aside class="notes"><p>Tổng kết bài 1 và dẫn sang Bài 2 về Khai phá tập mục phổ biến.</p></aside>
+        </section>
+
+        <section id="lec01-s03-01" data-slide-id="lec01-s03-01" class="example-slide">
+          <h2>Tài liệu học tập & Đọc thêm</h2>
+          <p><strong>Giáo trình tham khảo:</strong> J. Leskovec, A. Rajaraman, J. D. Ullman. <em>Mining of Massive Datasets</em> (MMDS), Chapter 1.</p>
+          <p><a href="material-viewer.html?doc=materials/lec-01/lecture-note.md&amp;deck=lecture-01-tong-quan-khai-pha-du-lieu.html">Mở bài đọc tự học chi tiết (Lecture Notes) →</a></p>
+          <aside class="notes"><p>Sinh viên đọc trước chương 1 sách MMDS và làm các câu hỏi trong ghi chú bài giảng.</p></aside>
+        </section>
+      </section>
+
+      <div class="footer">Khai phá dữ liệu (Data Mining) · Bài 01: Tổng quan</div>
+    </div>
+  </div>
+
+  <script src="revealjs/dist/reveal.js"></script>
+  <script src="plugin/notes/notes.js"></script>
+  <script src="plugin/highlight/highlight.js"></script>
+  <script src="plugin/math/math.js"></script>
+  <script>
+    Reveal.initialize({
+      width: 1280,
+      height: 720,
+      margin: 0.04,
+      controlsLayout: "edges",
+      slideNumber: true,
+      hashOneBasedIndex: true,
+      hash: true,
+      katex: { local: "vendor/katex" },
+      plugins: [RevealHighlight, RevealNotes, RevealMath.KaTeX]
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+  <title>Bài NN: Tên bài · Khai phá dữ liệu</title>
+  <meta name="description" content="Một câu mô tả nội dung bài; nguồn tài liệu trục của bài."/>
+  <link rel="icon" type="image/png" href="favicon.png?v=2"/>
+  <link rel="icon" type="image/x-icon" href="favicon.ico?v=2"/>
+  <link rel="stylesheet" href="revealjs/dist/reset.css"/>
+  <link rel="stylesheet" href="revealjs/dist/reveal.css"/>
+  <link rel="stylesheet" href="revealjs/dist/theme/white.css"/>
+  <link rel="stylesheet" href="lecture-style.css"/>
+  <link rel="stylesheet" href="plugin/highlight/monokai.css"/>
+</head>
+<body>
+  <div class="reveal course-deck lecture-ten-bai">
+    <div class="slides">
+      <!-- Mạch 1: Mở đầu. Trang bìa là trang tiêu đề của mạch này. -->
+      <section aria-label="Mở đầu">
+        <section id="lecNN-s01-01" data-slide-id="lecNN-s01-01" class="title-slide">
+          <h1 class="lecture-title">Tên bài học</h1>
+          <p class="supporting-text">Một câu luận đề: kết quả hoặc cơ chế trung tâm của bài.</p>
+          <p class="course-name">Khai phá dữ liệu (Data Mining)</p>
+          <p class="institution-name">Viện Trí tuệ Nhân tạo · Trường Đại học Công nghệ · ĐHQGHN</p>
+          <aside class="notes"><p>Kết quả của bài trước được dùng lại và giới hạn của nó dẫn tới bài này. Nguồn trục của bài.</p></aside>
+        </section>
+
+        <section id="lecNN-s01-02" data-slide-id="lecNN-s01-02" class="example-slide">
+          <h2>Tiên quyết và quy ước</h2>
+          <p><strong>Nhắc lại:</strong> kết quả được dùng lại, phát biểu trong một câu súc tích.</p>
+          <p><strong>Ký hiệu:</strong> miền, kiểu, kích thước và quy ước chỉ số của bài.</p>
+          <aside class="notes"><p>Giải thích vì sao từng kết quả nhắc lại là cần thiết cho bài.</p></aside>
+        </section>
+
+        <section id="lecNN-s01-03" data-slide-id="lecNN-s01-03" class="agenda-slide">
+          <h2>Nội dung</h2>
+          <ol>
+            <li>Mở đầu và bài toán</li>
+            <li>Tên mạch 2</li>
+            <li>Tên mạch 3</li>
+            <li>Tổng kết và tự kiểm tra</li>
+            <li>Bài tập vận dụng</li>
+          </ol>
+          <p><strong>Đọc trước:</strong> giáo trình, chương, mục.</p>
+          <aside class="notes"><p>Mục tiêu học tập quan sát được, mỗi mục tiêu ứng với một sản phẩm kiểm tra được.</p></aside>
+        </section>
+
+        <section id="lecNN-s01-04" data-slide-id="lecNN-s01-04" class="example-slide">
+          <h2>Vấn đề trung tâm</h2>
+          <p><strong>Nhu cầu:</strong> bài toán dữ liệu lớn của bài trong một dòng (dữ liệu, đầu ra, giới hạn tài nguyên).</p>
+          <ul>
+            <li>Mạch 2 trả lời: câu trả lời có điều kiện, một dòng.</li>
+            <li>Mạch 3 trả lời: câu trả lời có điều kiện, một dòng.</li>
+          </ul>
+          <aside class="notes"><p>Con số quy mô có nguồn; giới hạn của phương pháp quen thuộc.</p></aside>
+        </section>
+      </section>
+
+      <!-- Mạch 2: mở bằng một trang tiêu đề mạch -->
+      <section aria-label="Tên mạch 2">
+        <section id="lecNN-s02-00" data-slide-id="lecNN-s02-00" class="strand-title">
+          <div class="strand-title-body">
+            <h2><span class="strand-number">2.</span>Tên mạch 2</h2>
+            <p class="strand-lead">Muốn đạt đích của mạch, phải làm việc mà mạch này làm.</p>
+            <p class="strand-keys">Từ khóa 1 · Từ khóa 2 · Từ khóa 3</p>
+          </div>
+          <aside class="notes"><p>Kết quả kế thừa từ mạch trước; nhiệm vụ của mạch; kết quả giao cho mạch sau.</p></aside>
+        </section>
+
+        <section id="lecNN-s02-01" data-slide-id="lecNN-s02-01" class="example-slide">
+          <h2>Tên khái niệm</h2>
+          <p><strong>Nhu cầu:</strong> điều chưa tính được bằng công cụ đã có.</p>
+          <p>Ví dụ dẫn nhập có số: dữ kiện nhỏ tính tay được.</p>
+          <aside class="notes"><p>Trực giác, giả thiết, lỗi dễ mắc và nguồn của trang.</p></aside>
+        </section>
+
+        <section id="lecNN-s02-02" data-slide-id="lecNN-s02-02" class="example-slide">
+          <h2>Thuật toán: tên thuật toán</h2>
+          <p><strong>Đầu vào:</strong> kiểu, kích thước và điều kiện trước.</p>
+          <p><strong>Đầu ra:</strong> kết quả và điều kiện bảo đảm.</p>
+          <pre class="ex-code"><code class="language-plaintext" data-trim>Khởi tạo
+Với mỗi phần tử: thao tác quyết định
+Trả về kết quả</code></pre>
+          <aside class="notes"><p>Thao tác quyết định; điểm then chốt của thuật toán; nguồn trích dẫn.</p></aside>
+        </section>
+
+        <section id="lecNN-s02-03" data-slide-id="lecNN-s02-03" class="example-slide">
+          <h2>Câu hỏi về tên mạch 2</h2>
+          <p><strong>Câu hỏi:</strong> yêu cầu người học tính, giải thích, chứng minh hoặc áp dụng.</p>
+          <aside class="notes"><p>Lời giải và tiêu chí đánh giá.</p></aside>
+        </section>
+      </section>
+
+      <!-- Mạch kết luận -->
+      <section aria-label="Tổng kết và tự kiểm tra">
+        <section id="lecNN-s04-00" data-slide-id="lecNN-s04-00" class="strand-title">
+          <div class="strand-title-body">
+            <h2><span class="strand-number">4.</span>Tổng kết và tự kiểm tra</h2>
+            <p class="strand-lead">Muốn chọn phương pháp cho bài toán mở đầu, phải nêu giả thiết, bảo đảm và chi phí của từng kết quả.</p>
+          </div>
+          <aside class="notes"><p>Các kết quả được thu hồi và cách chúng giải quyết vấn đề trung tâm.</p></aside>
+        </section>
+
+        <section id="lecNN-s04-01" data-slide-id="lecNN-s04-01" class="example-slide">
+          <h2>Các kết quả chính</h2>
+          <table class="ex-table">
+            <thead>
+              <tr>
+                <th scope="col">Kết quả</th>
+                <th scope="col">Giả thiết cốt lõi</th>
+                <th scope="col">Công thức hoặc thuật toán</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Kết quả 1</td>
+                <td>Giả thiết</td>
+                <td>Công thức hoặc quy tắc</td>
+              </tr>
+            </tbody>
+          </table>
+          <aside class="notes"><p>Điều kiện áp dụng và giới hạn của từng kết quả.</p></aside>
+        </section>
+
+        <section id="lecNN-s04-02" data-slide-id="lecNN-s04-02" class="example-slide">
+          <h2>Câu hỏi tự kiểm tra</h2>
+          <p><strong>Câu hỏi:</strong> trả lời và nêu kết quả đã dùng.</p>
+          <ol>
+            <li>Câu kiểm tra giả thiết.</li>
+            <li>Câu kiểm tra sự phân biệt giữa các khái niệm.</li>
+          </ol>
+          <aside class="notes"><p>Lời giải chi tiết từng câu.</p></aside>
+        </section>
+
+        <section id="lecNN-s04-03" data-slide-id="lecNN-s04-03" class="example-slide">
+          <h2>Nguồn và tài liệu đọc</h2>
+          <p><strong>Nguồn:</strong> tác giả, năm, chương, mục, trang.</p>
+          <p><a href="material-viewer.html?doc=materials/lec-NN/lecture-note.md&amp;deck=lecture-NN-ten-bai.html">Đọc ghi chú bài giảng chi tiết</a></p>
+          <aside class="notes"><p>Bài kế tiếp dùng kết quả nào của bài này.</p></aside>
+        </section>
+      </section>
+
+      <!-- Mạch bài tập vận dụng -->
+      <section aria-label="Bài tập vận dụng">
+        <section id="lecNN-s05-00" data-slide-id="lecNN-s05-00" class="strand-title">
+          <div class="strand-title-body">
+            <h2><span class="strand-number">5.</span>Bài tập vận dụng</h2>
+            <p class="strand-lead">Nhu cầu: áp dụng các kết quả của bài lên các bài tập trong giáo trình chuẩn.</p>
+          </div>
+          <aside class="notes"><p>Các bài toán trích dẫn từ sách và năng lực được kiểm tra.</p></aside>
+        </section>
+
+        <section id="lecNN-s05-01" data-slide-id="lecNN-s05-01" class="example-slide">
+          <h2>Bài tập: chủ đề</h2>
+          <p><strong>Câu hỏi:</strong> đề bài gõ bằng chữ và KaTeX, nguyên dữ kiện từ giáo trình.</p>
+          <aside class="notes"><p>Số bài, mục và trang nguồn; gợi ý bước mở đầu; lời giải và tiêu chí chấm.</p></aside>
+        </section>
+      </section>
+
+      <div class="footer">Khai phá dữ liệu (Data Mining) · Bài NN</div>
+    </div>
+  </div>
+
+  <script src="revealjs/dist/reveal.js"></script>
+  <script src="plugin/notes/notes.js"></script>
+  <script src="plugin/highlight/highlight.js"></script>
+  <script src="plugin/math/math.js"></script>
+  <script>
+    Reveal.initialize({
+      width: 1280,
+      height: 720,
+      margin: 0.04,
+      controlsLayout: "edges",
+      slideNumber: true,
+      hashOneBasedIndex: true,
+      hash: true,
+      katex: { local: "vendor/katex" },
+      plugins: [RevealHighlight, RevealNotes, RevealMath.KaTeX]
+    });
+  </script>
+</body>
+</html>
