@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Quiz Tuần 08: Phân cụm – Phần 2 (EM, GMM, DBSCAN) · Khai phá dữ liệu</title>
+  <link rel="icon" type="image/png" href="../../favicon.png?v=2">
+  <link rel="stylesheet" href="../../index-pages.css">
+  <style>
+    .quiz-wrap { max-width: 780px; margin: 0 auto; }
+    .quiz-question {
+      background: var(--surface, #fff);
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      padding: 22px 26px;
+      margin-bottom: 20px;
+    }
+    .q-num { font-size: .78rem; font-weight: 700; text-transform: uppercase;
+              letter-spacing: .08em; color: #6b7280; margin: 0 0 6px; }
+    .q-text { font-size: 1rem; font-weight: 600; margin: 0 0 14px;
+               line-height: 1.55; color: var(--text, #111); }
+    .q-options { list-style: none; padding: 0; margin: 0;
+                  display: flex; flex-direction: column; gap: 8px; }
+    .q-options label {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 10px 14px; border-radius: 9px;
+      border: 1px solid #e5e7eb; cursor: pointer;
+      transition: background .15s, border-color .15s;
+      font-size: .95rem; line-height: 1.45;
+    }
+    .q-options label:hover { background: #f9fafb; border-color: #d1d5db; }
+    .q-options input[type=radio] { margin-top: 3px; flex-shrink: 0; }
+    .opt-label { font-weight: 700; color: #374151; flex-shrink: 0; min-width: 18px; }
+    .opt-text { flex: 1; }
+    .q-options label.correct-choice { background: #ecfdf5; border-color: #6ee7b7; }
+    .q-options label.wrong-choice   { background: #fef2f2; border-color: #fca5a5; }
+    .q-feedback {
+      margin-top: 14px; padding: 13px 16px; border-radius: 9px;
+      display: none; font-size: .93rem; line-height: 1.55;
+    }
+    .q-feedback.show-correct { display: block; background: #ecfdf5;
+                                 border: 1px solid #6ee7b7; color: #065f46; }
+    .q-feedback.show-wrong   { display: block; background: #fef2f2;
+                                 border: 1px solid #fca5a5; color: #991b1b; }
+    .q-feedback .fb-correct, .q-feedback .fb-wrong { display: none; }
+    .q-feedback.show-correct .fb-correct { display: block; }
+    .q-feedback.show-wrong   .fb-wrong   { display: block; }
+    .quiz-summary {
+      background: var(--surface, #fff); border: 2px solid #e5e7eb;
+      border-radius: 14px; padding: 24px 28px; margin-bottom: 20px;
+      text-align: center; display: none;
+    }
+    .quiz-summary h2 { margin: 0 0 8px; font-size: 1.3rem; }
+    .score-big { font-size: 2.5rem; font-weight: 800; color: #059669; margin: 10px 0; }
+    .btn-reset {
+      display: inline-block; margin-top: 14px;
+      padding: 10px 24px; border-radius: 8px;
+      background: #2563eb; color: #fff; font-weight: 600;
+      border: none; cursor: pointer; font-size: .95rem; text-decoration: none;
+    }
+    .btn-reset:hover { background: #1d4ed8; }
+    .quiz-nav {
+      display: flex; gap: 12px; justify-content: space-between;
+      margin: 24px 0 8px; flex-wrap: wrap;
+    }
+    .nav-btn {
+      padding: 9px 20px; border-radius: 8px; border: 1px solid #d1d5db;
+      background: #fff; color: var(--text, #111); font-weight: 600;
+      text-decoration: none; font-size: .92rem; transition: background .15s;
+    }
+    .nav-btn:hover { background: #f3f4f6; }
+    .download-bar {
+      display: flex; align-items: center; gap: 12px;
+      background: #f0f9ff; border: 1px solid #bae6fd;
+      border-radius: 10px; padding: 12px 18px; margin-bottom: 20px;
+      font-size: .93rem; color: #0369a1;
+    }
+    .download-bar a { font-weight: 700; color: #0369a1; text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <main class="page-shell">
+    <section class="hero">
+      <p class="eyebrow">IAI · UET · VNU · BÀI TẬP NGẮN (QUIZ) · CLUSTERING – PHẦN 2</p>
+      <h1>Quiz Tuần 08</h1>
+      <p class="hero-subtitle">Phân cụm – Phần 2 (EM, GMM, DBSCAN)</p>
+      <div class="hero-text">
+        <p>Phiếu câu hỏi trắc nghiệm gồm <strong>6 câu</strong>. Nhấp chọn đáp án để nhận kết quả và lời giải thích tức thì.</p>
+      </div>
+      <div class="hero-actions">
+        <a class="secondary-link" href="../../index.html#schedule">
+          <span aria-hidden="true">←</span>
+          <span>Quay lại trang môn học</span>
+        </a>
+      </div>
+    </section>
+
+    <div class="quiz-wrap" style="margin-top:24px;">
+      <div class="download-bar">
+        📄 Tải nội dung quiz về máy:
+        <a href="docs/quiz-08.docx" download>⬇ Tải file Word (.docx)</a>
+      </div>
+
+      <div class="quiz-summary" id="summary">
+        <h2>🎉 Hoàn thành Quiz!</h2>
+        <div class="score-big" id="score-display"></div>
+        <p id="score-msg" style="color:#374151;margin:4px 0 0;"></p>
+        <button class="btn-reset" onclick="resetQuiz()">🔄 Làm lại</button>
+      </div>
+
+      <form onsubmit="return false" id="quiz-form">
+  <div class="quiz-question" id="block-q1">
+    <p class="q-num">Câu 1</p>
+    <p class="q-text">Mục tiêu của ước lượng hợp lý cực đại (MLE) là gì?</p>
+    <ul class="q-options">
+      <li>
+        <label>
+          <input type="radio" name="q1" value="0">
+          <span class="opt-label">A</span>
+          <span class="opt-text">Tìm giá trị của θ sao cho xác suất P(x∣θ) của toàn bộ dữ liệu là lớn nhất.</span>
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="radio" name="q1" value="1">
+          <span class="opt-label">B</span>
+          <span class="opt-text">Tìm giá trị của θ sao cho xác suất hậu nghiệm P(θ∣x) là lớn nhất.</span>
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="radio" name="q1" value="2">
+          <span class="opt-label">C</span>
+          <span class="opt-text">Tìm giá trị của θ sao cho xác suất có điều kiện P(x∣θ) là nhỏ nhất.</span>
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="radio" name="q1" value="3">
+          <span class="opt-label">D</span>
+          <span class="opt-text">Tìm giá trị của θ sao cho khoảng tin cậy của θ là lớn nhất.</span>
+        </label>
+      </li>
+    </ul>
+    <div class="q-feedback" data-correct="0">
+      <div class="fb-correct">✅ <strong>Chính xác!</strong> MLE tìm tham số θ để <strong>tối đa hóa hàm likelihood P(x∣θ)</strong> — xác suất quan sát được dữ liệu x với tham số θ.</div>
+      <div class="fb-wrong">❌ <strong>Chưa đúng.</strong> MLE tìm tham số θ để <strong>tối đa hóa hàm likelihood P(x∣θ)</strong> — xác suất quan sát được dữ liệu x với tham số θ.</div>
+    </div>
+  </div>
+  <div class="quiz-question" id="block-q2">
+    <p class="q-num">Câu 2</p>
+    <p class="q-text">Thuật toán EM được sử dụng để làm gì?</p>
+    <ul class="q-options">
+      <li>
+        <label>
+          <input type="radio" name="q2" value="0">
+          <span class="opt-label">A</span>
+          <span class="opt-text">Giảm thiểu sai số dự báo trong hồi quy tuyến tính.</span>
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="radio" name="q2" value="1">
+          <span class="opt-label">B</span>
+          <span class="opt-text">Tối ưu hóa trực tiếp hàm hợp lý để tìm tham số tốt nhất.</span>
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="radio" name="q2" value="2">
+          <span class="opt-label">C</span>
+          <span class="opt-text">Xử lý các mô hình có biến ẩn bằng cách lặp lại hai bước: tính kỳ vọng (E-step) và cập nhật tham số (M-step).</span>
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="radio" name="q2" value="3">
+          <span class="opt-label">D</span>
+          <span class="opt-text">Dùng để huấn luyện mạng nơ-ron sâu với dữ liệu có nhiễu.</span>
+        </label>
+      </li>
+    </ul>
+    <div class="q-feedback" data-correct="2">
+      <div class="fb-correct">✅ <strong>Chính xác!</strong> Thuật toán EM xử lý bài toán có <strong>biến ẩn (latent variables)</strong> bằng 2 bước lặp: <strong>E-step</strong> (tính kỳ vọng) và <strong>M-step</strong> (cập nhật tham số).</div>
+      <div class="fb-wrong">❌ <strong>Chưa đúng.</strong> Thuật toán EM xử lý bài toán có <strong>biến ẩn (latent variables)</strong> bằng 2 bước lặp: <strong>E-step</strong> (tính kỳ vọng) và <strong>M-step</strong> (cập nhật tham số).</div>
+    </div>
+  </div>
+  <div class="quiz-question" id="block-q3">
+    <p class="q-num">Câu 3</p>
+    <p class="q-text">Phân cụm sử dụng mô hình hỗn hợp Gauss (GMM) khác với thuật toán phân cụm K-means ở điểm nào?</p>
+    <ul class="q-options">
+      <li>
+        <label>
+          <input type="radio" name="q3" value="0">
+          <span class="opt-label">A</span>
+          <span class="opt-text">K-means sử dụng phân phối Gaussian để mô hình hóa dữ liệu, trong khi GMM không sử dụng phân phối xác suất.</span>
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="radio" name="q3" value="1">
+          <span class="opt-label">B</span>
+          <span class="opt-text">GMM luôn tạo ra các cụm có kích thước bằng nhau, còn K-means có thể tạo ra cụm với kích thước không đều.</span>
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="radio" name="q3" value="2">
+          <span class="opt-label">C</span>
+          <span class="opt-text">GMM chỉ hoạt động trên dữ liệu một chiều, trong khi K-means có thể hoạt động trên dữ liệu nhiều chiều.</span>
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="radio" name="q3" value="3">
+          <span class="opt-label">D</span>
+          <span class="opt-text">GMM cho phép một điểm dữ liệu có thể thuộc nhiều cụm với xác suất khác nhau, trong khi K-means chỉ gán một cụm duy nhất.</span>
+        </label>
+      </li>
+    </ul>
+    <div class="q-feedback" data-correct="3">
+      <div class="fb-correct">✅ <strong>Chính xác!</strong> GMM là <em>soft clustering</em>: mỗi điểm có <strong>xác suất thuộc về từng cụm</strong>. K-means là <em>hard clustering</em>: mỗi điểm chỉ thuộc về <strong>đúng 1 cụm</strong>.</div>
+      <div class="fb-wrong">❌ <strong>Chưa đúng.</strong> GMM là <em>soft clustering</em>: mỗi điểm có <strong>xác suất thuộc về từng cụm</strong>. K-means là <em>hard clustering</em>: mỗi điểm chỉ thuộc về <strong>đúng 1 cụm</strong>.</div>
+    </div>
+  </div>
+  <div class="quiz-question" id="block-q4">
+    <p class="q-num">Câu 4</p>
+    <p class="q-text">Trong mô hình GMM, mỗi cụm được mô hình hóa bằng một phân phối Gauss có tham số nào?</p>
+    <ul class="q-options">
+      <li>
+        <label>
+          <input type="radio" name="q4" value="0">
+          <span class="opt-label">A</span>
+          <span class="opt-text">Trung bình (mean), phương sai (variance), và trọng số (weight) của cụm.</span>
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="radio" name="q4" value="1">
+          <span class="opt-label">B</span>
+          <span class="opt-text">Số lượng điểm dữ liệu và khoảng cách từ tâm cụm đến biên dữ liệu.</span>
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="radio" name="q4" value="2">
+          <span class="opt-label">C</span>
+          <span class="opt-text">Khoảng cách Euclidean trung bình đến tâm cụm.</span>
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="radio" name="q4" value="3">
+          <span class="opt-label">D</span>
+          <span class="opt-text">Trung bình (mean), phương sai (variance), và số lượng điểm dữ liệu trong cụm</span>
+        </label>
+      </li>
+    </ul>
+    <div class="q-feedback" data-correct="0">
+      <div class="fb-correct">✅ <strong>Chính xác!</strong> Mỗi Gaussian trong GMM có 3 tham số: <strong>μ (mean)</strong> – vị trí trung tâm, <strong>Σ (covariance)</strong> – hình dạng cụm, <strong>π (weight)</strong> – tỷ trọng của cụm.</div>
+      <div class="fb-wrong">❌ <strong>Chưa đúng.</strong> Mỗi Gaussian trong GMM có 3 tham số: <strong>μ (mean)</strong> – vị trí trung tâm, <strong>Σ (covariance)</strong> – hình dạng cụm, <strong>π (weight)</strong> – tỷ trọng của cụm.</div>
+    </div>
+  </div>
+  <div class="quiz-question" id="block-q5">
+    <p class="q-num">Câu 5</p>
+    <p class="q-text">Thuật toán DBSCAN xác định các cụm dựa trên yếu tố nào?</p>
+    <ul class="q-options">
+      <li>
+        <label>
+          <input type="radio" name="q5" value="0">
+          <span class="opt-label">A</span>
+          <span class="opt-text">Mật độ điểm trong một vùng lân cận.</span>
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="radio" name="q5" value="1">
+          <span class="opt-label">B</span>
+          <span class="opt-text">Khoảng cách trung bình giữa các điểm trong cụm.</span>
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="radio" name="q5" value="2">
+          <span class="opt-label">C</span>
+          <span class="opt-text">Số lượng cụm được xác định trước.</span>
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="radio" name="q5" value="3">
+          <span class="opt-label">D</span>
+          <span class="opt-text">Hình dạng hình học của các cụm.</span>
+        </label>
+      </li>
+    </ul>
+    <div class="q-feedback" data-correct="0">
+      <div class="fb-correct">✅ <strong>Chính xác!</strong> DBSCAN xác định cụm dựa trên <strong>mật độ điểm</strong> trong vùng lân cận bán kính ε với tối thiểu minPts điểm.</div>
+      <div class="fb-wrong">❌ <strong>Chưa đúng.</strong> DBSCAN xác định cụm dựa trên <strong>mật độ điểm</strong> trong vùng lân cận bán kính ε với tối thiểu minPts điểm.</div>
+    </div>
+  </div>
+  <div class="quiz-question" id="block-q6">
+    <p class="q-num">Câu 6</p>
+    <p class="q-text">Trong thuật toán DBSCAN, mỗi điểm dữ liệu có thể được phân loại thành loại nào?</p>
+    <ul class="q-options">
+      <li>
+        <label>
+          <input type="radio" name="q6" value="0">
+          <span class="opt-label">A</span>
+          <span class="opt-text">Điểm cụm (cluster point), điểm đơn lẻ (singleton point), và điểm rìa (edge point).</span>
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="radio" name="q6" value="1">
+          <span class="opt-label">B</span>
+          <span class="opt-text">Điểm trung tâm (core point), điểm chuyển tiếp (transition point), và điểm ngoại biên (outlier point).</span>
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="radio" name="q6" value="2">
+          <span class="opt-label">C</span>
+          <span class="opt-text">Điểm trung tâm (core point), điểm biên (border point), và điểm nhiễu (noise point).</span>
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="radio" name="q6" value="3">
+          <span class="opt-label">D</span>
+          <span class="opt-text">Điểm gần tâm cụm (centroid point), điểm xa tâm cụm (distant point), và điểm không thuộc cụm nào (unclustered point).</span>
+        </label>
+      </li>
+    </ul>
+    <div class="q-feedback" data-correct="2">
+      <div class="fb-correct">✅ <strong>Chính xác!</strong> DBSCAN phân loại điểm thành 3 loại: <strong>Core point</strong> (đủ minPts láng giềng trong ε), <strong>Border point</strong> (trong vùng ε của core nhưng không đủ minPts), và <strong>Noise point</strong> (không thuộc cụm nào).</div>
+      <div class="fb-wrong">❌ <strong>Chưa đúng.</strong> DBSCAN phân loại điểm thành 3 loại: <strong>Core point</strong> (đủ minPts láng giềng trong ε), <strong>Border point</strong> (trong vùng ε của core nhưng không đủ minPts), và <strong>Noise point</strong> (không thuộc cụm nào).</div>
+    </div>
+  </div>
+      </form>
+
+      <div class="quiz-nav">
+        <a class="nav-btn" href="quiz-07.html">← Quiz 07</a>
+        <span style="flex:1"></span>
+        
+      </div>
+    </div>
+
+    <p class="footer">
+      Viện Trí tuệ nhân tạo · Trường Đại học Công nghệ · Đại học Quốc gia Hà Nội
+    </p>
+  </main>
+
+  <script>
+    const CORRECT = [0, 2, 3, 0, 0, 2];
+    const N = 6;
+    const answered = new Array(N).fill(false);
+    const scores   = new Array(N).fill(false);
+
+    document.querySelectorAll('.q-options input[type=radio]').forEach(radio => {
+      radio.addEventListener('change', function () {
+        const qBlock  = this.closest('.quiz-question');
+        const fb      = qBlock.querySelector('.q-feedback');
+        const qIdx    = parseInt(this.name.replace('q','')) - 1;
+        const chosen  = parseInt(this.value);
+        const correct = CORRECT[qIdx];
+        const isOk    = chosen === correct;
+
+        if (answered[qIdx]) return;
+        answered[qIdx] = true;
+        scores[qIdx]   = isOk;
+
+        fb.className = 'q-feedback ' + (isOk ? 'show-correct' : 'show-wrong');
+        qBlock.querySelectorAll('.q-options label').forEach((lbl, i) => {
+          lbl.style.pointerEvents = 'none';
+          if (i === correct) lbl.classList.add('correct-choice');
+          else if (i === chosen && !isOk) lbl.classList.add('wrong-choice');
+        });
+
+        if (answered.every(Boolean)) showSummary();
+      });
+    });
+
+    function showSummary() {
+      const total = scores.filter(Boolean).length;
+      const pct   = Math.round(total / N * 100);
+      document.getElementById('score-display').textContent = total + '/' + N + ' (' + pct + '%)';
+      const msg = pct === 100 ? '🏆 Xuất sắc! Bạn trả lời đúng tất cả câu hỏi.' :
+                  pct >= 80  ? '👍 Rất tốt! Tiếp tục duy trì nhé.' :
+                  pct >= 60  ? '📖 Khá tốt. Hãy ôn lại các câu sai.' :
+                               '💪 Cố gắng hơn nhé! Hãy đọc lại bài giảng.';
+      document.getElementById('score-msg').textContent = msg;
+      const s = document.getElementById('summary');
+      s.style.display = 'block';
+      s.scrollIntoView({behavior:'smooth', block:'center'});
+    }
+
+    function resetQuiz() { location.reload(); }
+  </script>
+</body>
+</html>

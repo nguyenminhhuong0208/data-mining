@@ -3,18 +3,89 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Quiz Tuần 04: Tiền xử lý dữ liệu (Làm sạch, Xử lý thiếu & Ngoại lai) · Khai phá dữ liệu</title>
+  <title>Quiz Tuần 04: Chuẩn bị dữ liệu (Data Preparation) · Khai phá dữ liệu</title>
   <link rel="icon" type="image/png" href="../../favicon.png?v=2">
   <link rel="stylesheet" href="../../index-pages.css">
+  <style>
+    .quiz-wrap { max-width: 780px; margin: 0 auto; }
+    .quiz-question {
+      background: var(--surface, #fff);
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      padding: 22px 26px;
+      margin-bottom: 20px;
+    }
+    .q-num { font-size: .78rem; font-weight: 700; text-transform: uppercase;
+              letter-spacing: .08em; color: #6b7280; margin: 0 0 6px; }
+    .q-text { font-size: 1rem; font-weight: 600; margin: 0 0 14px;
+               line-height: 1.55; color: var(--text, #111); }
+    .q-options { list-style: none; padding: 0; margin: 0;
+                  display: flex; flex-direction: column; gap: 8px; }
+    .q-options label {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 10px 14px; border-radius: 9px;
+      border: 1px solid #e5e7eb; cursor: pointer;
+      transition: background .15s, border-color .15s;
+      font-size: .95rem; line-height: 1.45;
+    }
+    .q-options label:hover { background: #f9fafb; border-color: #d1d5db; }
+    .q-options input[type=radio] { margin-top: 3px; flex-shrink: 0; }
+    .opt-label { font-weight: 700; color: #374151; flex-shrink: 0; min-width: 18px; }
+    .opt-text { flex: 1; }
+    .q-options label.correct-choice { background: #ecfdf5; border-color: #6ee7b7; }
+    .q-options label.wrong-choice   { background: #fef2f2; border-color: #fca5a5; }
+    .q-feedback {
+      margin-top: 14px; padding: 13px 16px; border-radius: 9px;
+      display: none; font-size: .93rem; line-height: 1.55;
+    }
+    .q-feedback.show-correct { display: block; background: #ecfdf5;
+                                 border: 1px solid #6ee7b7; color: #065f46; }
+    .q-feedback.show-wrong   { display: block; background: #fef2f2;
+                                 border: 1px solid #fca5a5; color: #991b1b; }
+    .q-feedback .fb-correct, .q-feedback .fb-wrong { display: none; }
+    .q-feedback.show-correct .fb-correct { display: block; }
+    .q-feedback.show-wrong   .fb-wrong   { display: block; }
+    .quiz-summary {
+      background: var(--surface, #fff); border: 2px solid #e5e7eb;
+      border-radius: 14px; padding: 24px 28px; margin-bottom: 20px;
+      text-align: center; display: none;
+    }
+    .quiz-summary h2 { margin: 0 0 8px; font-size: 1.3rem; }
+    .score-big { font-size: 2.5rem; font-weight: 800; color: #059669; margin: 10px 0; }
+    .btn-reset {
+      display: inline-block; margin-top: 14px;
+      padding: 10px 24px; border-radius: 8px;
+      background: #2563eb; color: #fff; font-weight: 600;
+      border: none; cursor: pointer; font-size: .95rem; text-decoration: none;
+    }
+    .btn-reset:hover { background: #1d4ed8; }
+    .quiz-nav {
+      display: flex; gap: 12px; justify-content: space-between;
+      margin: 24px 0 8px; flex-wrap: wrap;
+    }
+    .nav-btn {
+      padding: 9px 20px; border-radius: 8px; border: 1px solid #d1d5db;
+      background: #fff; color: var(--text, #111); font-weight: 600;
+      text-decoration: none; font-size: .92rem; transition: background .15s;
+    }
+    .nav-btn:hover { background: #f3f4f6; }
+    .download-bar {
+      display: flex; align-items: center; gap: 12px;
+      background: #f0f9ff; border: 1px solid #bae6fd;
+      border-radius: 10px; padding: 12px 18px; margin-bottom: 20px;
+      font-size: .93rem; color: #0369a1;
+    }
+    .download-bar a { font-weight: 700; color: #0369a1; text-decoration: underline; }
+  </style>
 </head>
 <body>
   <main class="page-shell">
     <section class="hero">
-      <p class="eyebrow">IAI · UET · VNU · BÀI TẬP NGẮN (QUIZ)</p>
+      <p class="eyebrow">IAI · UET · VNU · BÀI TẬP NGẮN (QUIZ) · LÀM SẠCH & BIẾN ĐỔI DỮ LIỆU</p>
       <h1>Quiz Tuần 04</h1>
-      <p class="hero-subtitle">Tiền xử lý dữ liệu (Làm sạch, Xử lý thiếu & Ngoại lai)</p>
+      <p class="hero-subtitle">Chuẩn bị dữ liệu (Data Preparation)</p>
       <div class="hero-text">
-        <p>Phiếu câu hỏi trắc nghiệm và củng cố kiến thức nhanh. Nhấp chọn đáp án để nhận kết quả và lời giải thích chi tiết tức thì.</p>
+        <p>Phiếu câu hỏi trắc nghiệm gồm <strong>5 câu</strong>. Nhấp chọn đáp án để nhận kết quả và lời giải thích tức thì.</p>
       </div>
       <div class="hero-actions">
         <a class="secondary-link" href="../../index.html#schedule">
@@ -24,17 +95,269 @@
       </div>
     </section>
 
-    <div class="panel" style="margin-top: 24px; text-align: center; padding: 48px 24px;">
-      <div style="font-size: 2.5rem; margin-bottom: 12px;">📝</div>
-      <h2 style="font-size: 1.25rem; margin: 0 0 8px; color: var(--text);">Nội dung bài tập ngắn đang được cập nhật</h2>
-      <p class="panel-copy" style="max-width: 540px; margin: 0 auto; line-height: 1.6;">
-        Giảng viên có thể thêm các câu hỏi trắc nghiệm và đáp án vào giao diện này.
-      </p>
+    <div class="quiz-wrap" style="margin-top:24px;">
+      <div class="download-bar">
+        📄 Tải nội dung quiz về máy:
+        <a href="docs/quiz-04.docx" download>⬇ Tải file Word (.docx)</a>
+      </div>
+
+      <div class="quiz-summary" id="summary">
+        <h2>🎉 Hoàn thành Quiz!</h2>
+        <div class="score-big" id="score-display"></div>
+        <p id="score-msg" style="color:#374151;margin:4px 0 0;"></p>
+        <button class="btn-reset" onclick="resetQuiz()">🔄 Làm lại</button>
+      </div>
+
+      <form onsubmit="return false" id="quiz-form">
+  <div class="quiz-question" id="block-q1">
+    <p class="q-num">Câu 1</p>
+    <p class="q-text">Xử lý các giá trị không chính xác và không nhất quán nằm ở nhiệm vụ nào?</p>
+    <ul class="q-options">
+      <li>
+        <label>
+          <input type="radio" name="q1" value="0">
+          <span class="opt-label">A</span>
+          <span class="opt-text">d) Rút gọn dữ liệu (data reduction)</span>
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="radio" name="q1" value="1">
+          <span class="opt-label">B</span>
+          <span class="opt-text">b) Làm sạch dữ liệu (data cleaning)</span>
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="radio" name="q1" value="2">
+          <span class="opt-label">C</span>
+          <span class="opt-text">c) Biến đổi dữ liệu (data transformation)</span>
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="radio" name="q1" value="3">
+          <span class="opt-label">D</span>
+          <span class="opt-text">a) Tích hợp dữ liệu (data integration)</span>
+        </label>
+      </li>
+    </ul>
+    <div class="q-feedback" data-correct="1">
+      <div class="fb-correct">✅ <strong>Chính xác!</strong> <strong>Làm sạch dữ liệu (data cleaning)</strong>: phát hiện và sửa chữa hoặc loại bỏ dữ liệu không chính xác, không nhất quán, hoặc thiếu.</div>
+      <div class="fb-wrong">❌ <strong>Chưa đúng.</strong> <strong>Làm sạch dữ liệu (data cleaning)</strong>: phát hiện và sửa chữa hoặc loại bỏ dữ liệu không chính xác, không nhất quán, hoặc thiếu.</div>
+    </div>
+  </div>
+  <div class="quiz-question" id="block-q2">
+    <p class="q-num">Câu 2</p>
+    <p class="q-text">Khi gặp giá trị thiếu (missing value), các trường hợp nào có thể xảy ra?</p>
+    <ul class="q-options">
+      <li>
+        <label>
+          <input type="radio" name="q2" value="0">
+          <span class="opt-label">A</span>
+          <span class="opt-text">b) Dữ liệu không lỗi, giá trị trống (null value) là một trong các trường hợp hợp lệ</span>
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="radio" name="q2" value="1">
+          <span class="opt-label">B</span>
+          <span class="opt-text">d) Tất cả các trường hợp trên</span>
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="radio" name="q2" value="2">
+          <span class="opt-label">C</span>
+          <span class="opt-text">a) Lỗi dữ liệu</span>
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="radio" name="q2" value="3">
+          <span class="opt-label">D</span>
+          <span class="opt-text">c) Giá trị được chủ ý để trống để điền vào sau theo quy trình nghiệp vụ</span>
+        </label>
+      </li>
+    </ul>
+    <div class="q-feedback" data-correct="1">
+      <div class="fb-correct">✅ <strong>Chính xác!</strong> <strong>Tất cả các trường hợp trên</strong>: missing value có thể do lỗi dữ liệu, null hợp lệ, hoặc cố ý để trống theo nghiệp vụ.</div>
+      <div class="fb-wrong">❌ <strong>Chưa đúng.</strong> <strong>Tất cả các trường hợp trên</strong>: missing value có thể do lỗi dữ liệu, null hợp lệ, hoặc cố ý để trống theo nghiệp vụ.</div>
+    </div>
+  </div>
+  <div class="quiz-question" id="block-q3">
+    <p class="q-num">Câu 3</p>
+    <p class="q-text">Cho dữ liệu {4, 8, 15, 21, 21, 24, 25, 28, 34} chia 3 nhóm [4,8,15], [21,21,24], [25,28,34]. Kết quả làm trơn bằng biên nhóm (smoothing by bin boundaries) là trường hợp nào?</p>
+    <ul class="q-options">
+      <li>
+        <label>
+          <input type="radio" name="q3" value="0">
+          <span class="opt-label">A</span>
+          <span class="opt-text">a) [4, 8, 15], [21, 21, 24], [25, 28, 34]</span>
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="radio" name="q3" value="1">
+          <span class="opt-label">B</span>
+          <span class="opt-text">d) [4, 15, 15], [21, 24, 24], [25, 34, 34]</span>
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="radio" name="q3" value="2">
+          <span class="opt-label">C</span>
+          <span class="opt-text">c) [4, 4, 15], [21, 21, 24], [25, 25, 34]</span>
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="radio" name="q3" value="3">
+          <span class="opt-label">D</span>
+          <span class="opt-text">b) [9, 9, 9], [22, 22, 22], [29, 29, 29]</span>
+        </label>
+      </li>
+    </ul>
+    <div class="q-feedback" data-correct="1">
+      <div class="fb-correct">✅ <strong>Chính xác!</strong> <strong>[4, 15, 15], [21, 24, 24], [25, 34, 34]</strong>: smoothing by bin boundaries thay mỗi giá trị bằng biên gần nhất (min hoặc max của nhóm). Với nhóm [4,8,15]: 4→4, 8→15 (gần 15 hơn), 15→15.</div>
+      <div class="fb-wrong">❌ <strong>Chưa đúng.</strong> <strong>[4, 15, 15], [21, 24, 24], [25, 34, 34]</strong>: smoothing by bin boundaries thay mỗi giá trị bằng biên gần nhất (min hoặc max của nhóm). Với nhóm [4,8,15]: 4→4, 8→15 (gần 15 hơn), 15→15.</div>
+    </div>
+  </div>
+  <div class="quiz-question" id="block-q4">
+    <p class="q-num">Câu 4</p>
+    <p class="q-text">Phân tích tương quan có ý nghĩa như thế nào trong việc loại bỏ dư thừa dữ liệu?</p>
+    <ul class="q-options">
+      <li>
+        <label>
+          <input type="radio" name="q4" value="0">
+          <span class="opt-label">A</span>
+          <span class="opt-text">a) Nếu thuộc tính A có tương quan cao với thuộc tính B thì chỉ giữ lại một trong hai thuộc tính</span>
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="radio" name="q4" value="1">
+          <span class="opt-label">B</span>
+          <span class="opt-text">c) Giúp xác định các biến dư thừa trong tập dữ liệu, từ đó giúp giảm độ phức tạp của mô hình và cải thiện hiệu suất</span>
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="radio" name="q4" value="2">
+          <span class="opt-label">C</span>
+          <span class="opt-text">b) Nếu thuộc tính A độc lập với thuộc tính B thì chỉ giữ lại một trong hai thuộc tính</span>
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="radio" name="q4" value="3">
+          <span class="opt-label">D</span>
+          <span class="opt-text">d) Giúp làm sạch dữ liệu (data cleaning)</span>
+        </label>
+      </li>
+    </ul>
+    <div class="q-feedback" data-correct="1">
+      <div class="fb-correct">✅ <strong>Chính xác!</strong> <strong>Phân tích tương quan</strong> giúp xác định các biến dư thừa. Nếu A và B có tương quan cao → thông tin chồng lấn → loại bỏ một biến để giảm chiều và tránh overfitting.</div>
+      <div class="fb-wrong">❌ <strong>Chưa đúng.</strong> <strong>Phân tích tương quan</strong> giúp xác định các biến dư thừa. Nếu A và B có tương quan cao → thông tin chồng lấn → loại bỏ một biến để giảm chiều và tránh overfitting.</div>
+    </div>
+  </div>
+  <div class="quiz-question" id="block-q5">
+    <p class="q-num">Câu 5</p>
+    <p class="q-text">Giả sử bạn cần rời rạc hóa một thuộc tính có giá trị phân phối gần như đều trên khoảng 1 đến 150. Phương pháp nào sau đây là phù hợp nhất?</p>
+    <ul class="q-options">
+      <li>
+        <label>
+          <input type="radio" name="q5" value="0">
+          <span class="opt-label">A</span>
+          <span class="opt-text">d) Clustering–based discretization</span>
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="radio" name="q5" value="1">
+          <span class="opt-label">B</span>
+          <span class="opt-text">c) Equi–depth sub–ranges</span>
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="radio" name="q5" value="2">
+          <span class="opt-label">C</span>
+          <span class="opt-text">b) Equi–log sub–ranges</span>
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="radio" name="q5" value="3">
+          <span class="opt-label">D</span>
+          <span class="opt-text">a) Equi–width sub–ranges</span>
+        </label>
+      </li>
+    </ul>
+    <div class="q-feedback" data-correct="3">
+      <div class="fb-correct">✅ <strong>Chính xác!</strong> <strong>Equi–width sub–ranges</strong>: khi dữ liệu phân phối đều, chia theo độ rộng bằng nhau là đơn giản và hiệu quả nhất. Equi-depth phù hợp hơn khi phân phối lệch.</div>
+      <div class="fb-wrong">❌ <strong>Chưa đúng.</strong> <strong>Equi–width sub–ranges</strong>: khi dữ liệu phân phối đều, chia theo độ rộng bằng nhau là đơn giản và hiệu quả nhất. Equi-depth phù hợp hơn khi phân phối lệch.</div>
+    </div>
+  </div>
+      </form>
+
+      <div class="quiz-nav">
+        <a class="nav-btn" href="quiz-03.html">← Quiz 03</a>
+        <span style="flex:1"></span>
+        <a class="nav-btn" href="quiz-05.html">Quiz 05 →</a>
+      </div>
     </div>
 
     <p class="footer">
       Viện Trí tuệ nhân tạo · Trường Đại học Công nghệ · Đại học Quốc gia Hà Nội
     </p>
   </main>
+
+  <script>
+    const CORRECT = [1, 1, 1, 1, 3];
+    const N = 5;
+    const answered = new Array(N).fill(false);
+    const scores   = new Array(N).fill(false);
+
+    document.querySelectorAll('.q-options input[type=radio]').forEach(radio => {
+      radio.addEventListener('change', function () {
+        const qBlock  = this.closest('.quiz-question');
+        const fb      = qBlock.querySelector('.q-feedback');
+        const qIdx    = parseInt(this.name.replace('q','')) - 1;
+        const chosen  = parseInt(this.value);
+        const correct = CORRECT[qIdx];
+        const isOk    = chosen === correct;
+
+        if (answered[qIdx]) return;
+        answered[qIdx] = true;
+        scores[qIdx]   = isOk;
+
+        fb.className = 'q-feedback ' + (isOk ? 'show-correct' : 'show-wrong');
+        qBlock.querySelectorAll('.q-options label').forEach((lbl, i) => {
+          lbl.style.pointerEvents = 'none';
+          if (i === correct) lbl.classList.add('correct-choice');
+          else if (i === chosen && !isOk) lbl.classList.add('wrong-choice');
+        });
+
+        if (answered.every(Boolean)) showSummary();
+      });
+    });
+
+    function showSummary() {
+      const total = scores.filter(Boolean).length;
+      const pct   = Math.round(total / N * 100);
+      document.getElementById('score-display').textContent = total + '/' + N + ' (' + pct + '%)';
+      const msg = pct === 100 ? '🏆 Xuất sắc! Bạn trả lời đúng tất cả câu hỏi.' :
+                  pct >= 80  ? '👍 Rất tốt! Tiếp tục duy trì nhé.' :
+                  pct >= 60  ? '📖 Khá tốt. Hãy ôn lại các câu sai.' :
+                               '💪 Cố gắng hơn nhé! Hãy đọc lại bài giảng.';
+      document.getElementById('score-msg').textContent = msg;
+      const s = document.getElementById('summary');
+      s.style.display = 'block';
+      s.scrollIntoView({behavior:'smooth', block:'center'});
+    }
+
+    function resetQuiz() { location.reload(); }
+  </script>
 </body>
 </html>
